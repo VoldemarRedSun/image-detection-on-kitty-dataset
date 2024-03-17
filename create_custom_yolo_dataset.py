@@ -18,13 +18,14 @@ def convert_txt_kitty2yolo(from_path: str,
     return entire_annotation
 
 
-def create_yolo_label_dir(source_dir: str = 'datasets\original_kitty\labels\\training\label_2.0',
-                          target_dir: str = 'datasets\kitty\labels\\train'):
+def create_yolo_label_dir(source_dir: str = 'datasets\kitty\orig_labels\\train_test',
+                          target_dir: str = 'datasets\kitty\labels\\train_test'):
     annotations_files = os.listdir(source_dir)
     annotations_files  = list(map(lambda file: os.path.join(source_dir, file), annotations_files))
     for i, file_path in enumerate(annotations_files):
         yolo_annot = convert_txt_kitty2yolo(file_path)
-        with open(target_dir + f'_{i}.txt', 'w') as target_file:
+        postfix = file_path.split('\\')[-1]
+        with open(target_dir + f'\\{postfix}', 'w') as target_file:
             target_file.write(yolo_annot)
 
 
