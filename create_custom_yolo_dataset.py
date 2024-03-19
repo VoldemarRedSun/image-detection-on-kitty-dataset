@@ -37,7 +37,7 @@ def create_normalize_label_dir(source_annot_dir: str = 'datasets\kitty\labels\\t
 
     annotations_files = os.listdir(source_annot_dir)
     annotations_files = list(map(lambda file: os.path.join(source_annot_dir, file), annotations_files))
-    image_paths, image_shapes = get_images_shape()
+    image_paths, image_shapes = get_images_shape(images_dir)
 
     for annot_path, img_size in zip(annotations_files, image_shapes):
         with open(annot_path) as file:
@@ -63,6 +63,18 @@ def get_images_shape(images_dir: str = 'datasets\kitty\images\\train_test'):
     img_sizes = [Image.open(path).size for path in image_paths]
     return image_paths, img_sizes
 
+
+
+def create_new_dataset_all_steps(images_dir: str = 'datasets\kitty\images\\train_25p',
+                                 label_dir_old: str = 'datasets\kitty\orig_labels\\train_25p',
+                                 label_dir_intermediate: str = 'datasets\kitty\orig_labels\\train_25p_intermediate',
+                                 label_dir_new: str = 'datasets\kitty\labels\\train_25p'):
+    create_yolo_label_dir(source_dir = label_dir_old, target_dir = label_dir_intermediate)
+    create_normalize_label_dir(source_annot_dir = label_dir_intermediate,
+    target_annot_dir = label_dir_new,
+    images_dir = images_dir)
+
+
 if __name__ == '__main__':
     # kitty_labels_dir = 'datasets\original_kitty\labels'
     # annotations_files = os.listdir(kitty_labels_dir)
@@ -70,4 +82,5 @@ if __name__ == '__main__':
     # config = yaml.safe_load(f)
     # create_yolo_label_dir()
     # get_images_shape()
-    create_normalize_label_dir()
+    # create_normalize_label_dir()
+    create_new_dataset_all_steps()
