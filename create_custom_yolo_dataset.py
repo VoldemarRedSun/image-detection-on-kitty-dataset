@@ -65,10 +65,10 @@ def get_images_shape(images_dir: str = 'datasets\kitty\images\\train_test'):
 
 
 
-def create_new_dataset_all_steps(images_dir: str = 'datasets\kitty\images\\train_25p',
-                                 label_dir_old: str = 'datasets\kitty\orig_labels\\train_25p',
-                                 label_dir_intermediate: str = 'datasets\kitty\orig_labels\\train_25p_intermediate',
-                                 label_dir_new: str = 'datasets\kitty\labels\\train_25p'):
+def create_new_dataset_all_steps(images_dir: str = 'datasets\kitty\images\\train_65p',
+                                 label_dir_old: str = 'datasets\kitty\orig_labels\\train_65p',
+                                 label_dir_intermediate: str = 'datasets\kitty\orig_labels\\train_65p_intermediate',
+                                 label_dir_new: str = 'datasets\kitty\labels\\train_65p'):
     create_yolo_label_dir(source_dir = label_dir_old, target_dir = label_dir_intermediate)
     create_normalize_label_dir(source_annot_dir = label_dir_intermediate,
     target_annot_dir = label_dir_new,
