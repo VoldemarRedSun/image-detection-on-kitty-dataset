@@ -85,12 +85,14 @@ def validate(valid_data_loader, model):
         # val_loss_hist.send(loss_value)
 
         metric.update(preds, targets)
-        map_dict_list.append(metric.compute())
+
 
         val_itr += 1
 
         # update the loss value beside the progress bar for each iteration
         # prog_bar.set_description(desc=f"Loss: {loss_value:.4f}")
+
+    map_dict_list.append(metric.compute())
 
     return val_loss_list
 
@@ -108,12 +110,12 @@ if __name__ == '__main__':
     # get the model parameters
     params = [p for p in model.parameters() if p.requires_grad]
     # define the optimizer
-    optimizer = torch.optim.SGD(params, lr=0.001, momentum=0.9, weight_decay=0.0005)
+    optimizer = torch.optim.Adam(params, lr=0.001, weight_decay=0.0005)
 
     # initialize the Averager class
     train_loss_hist = Averager()
     val_loss_hist = Averager()
-    metric = MeanAveragePrecision()
+    metric = MeanAveragePrecision(class_metrics=True)
     metric.to(DEVICE)
     train_itr = 1
     val_itr = 1
@@ -169,7 +171,7 @@ if __name__ == '__main__':
     for i, elem in enumerate(map_dict_list):
         all_epoch_map_stats[i] = elem
 
-    STATS_DIR = ROOT + 'image-detection-on-kitty-dataset\Faster_RCNN\\runs\\run2\\'
+    STATS_DIR = ROOT + 'image-detection-on-kitty-dataset\Faster_RCNN\\runs\\run3\\'
     try:
         stats_file = open(STATS_DIR + 'map_stats.txt', 'wt')
         stats_file.write(str(all_epoch_map_stats))
@@ -179,5 +181,5 @@ if __name__ == '__main__':
         print("Unable to write to file")
 
     fig_, ax_ = metric.plot()
-    PLOT_DIR = ROOT + 'image-detection-on-kitty-dataset\Faster_RCNN\\runs\\run2\\'
+    PLOT_DIR = ROOT + 'image-detection-on-kitty-dataset\Faster_RCNN\\runs\\run3\\'
     fig_.savefig(PLOT_DIR + 'progress.png')

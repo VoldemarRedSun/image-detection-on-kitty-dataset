@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+import pickle
+import copy
 
 from albumentations.pytorch import ToTensorV2
 from config import DEVICE, CLASSES
@@ -138,3 +140,29 @@ def save_loss_plot(OUT_DIR, train_loss, val_loss):
     print('SAVING PLOTS COMPLETE...')
 
     plt.close('all')
+
+def remove_ind(data: torch.tensor, indices):
+    indices_to_keep = [i for i in range(data.shape[0]) if i not in indices] # List of indices that should be kept
+    new_data = data[torch.LongTensor(indices_to_keep)]
+    return new_data
+
+# def remove_bbox(data: torch.tensor, indices):
+#     for ind in indices:
+#         new_data = torch.cat((data[:ind], data[ind + 1:]), dim=0)
+#     return new_data
+def clear_preds(batch_preds: list):
+    # inds_dontcare = []
+    new_batch_preds = []
+    for preds in batch_preds:
+        # inds_dontcare.append(torch.where(preds['labels'] == 8)[0])
+        inds_dontcare = torch.where(preds['labels'] == 8)[0]
+        preds['boxes'] = remove_ind(preds['boxes'], inds_dontcare)
+        preds['labels'] = remove_ind(preds['labels'], inds_dontcare)
+        new_batch_preds.append(preds)
+    return new_batch_preds
+
+if __name__ == '__main__':
+    with open('preds.pickle', 'rb') as file:
+        preds = pickle.load(file)
+        old_preds = copy.deepcopy(preds)
+    new_preds = clear_preds(preds)
