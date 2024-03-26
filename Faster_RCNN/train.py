@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
         # start timer and carry out training and validation
         start = time.time()
-        # train_loss = train(train_loader, model)
+        train_loss = train(train_loader, model)
         val_loss = validate(valid_loader, model)
         print(f"Epoch #{epoch+1} train loss: {train_loss_hist.value:.3f}")   
         print(f"Epoch #{epoch+1} validation loss: {val_loss_hist.value:.3f}")   
